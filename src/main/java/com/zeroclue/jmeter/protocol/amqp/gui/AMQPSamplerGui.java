@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 
 import kg.apc.jmeter.JMeterPluginsUtils;
 
+import org.apache.jmeter.gui.util.HorizontalPanel;
 import org.apache.jmeter.gui.util.VerticalPanel;
 import org.apache.jmeter.samplers.gui.AbstractSamplerGui;
 import org.apache.jmeter.testelement.TestElement;
@@ -38,12 +39,15 @@ public abstract class AMQPSamplerGui extends AbstractSamplerGui {
     protected JLabeledTextField queue = new JLabeledTextField("             Queue");
     protected JLabeledTextField routingKey = new JLabeledTextField("   Routing Key");
     protected JLabeledTextField messageTTL = new JLabeledTextField("Message TTL");
+    protected JLabeledTextField deadLetterExchange = new JLabeledTextField("DL Exchange");
+    protected JLabeledTextField deadLetterRoutingKey = new JLabeledTextField("DL Routing Key");
     protected JLabeledTextField messageExpires = new JLabeledTextField("           Expires");
     protected JLabeledTextField maxPriority = new JLabeledTextField("   Max Priority");
     protected final JCheckBox queueDurable = new JCheckBox("Durable", AMQPSampler.DEFAULT_QUEUE_DURABLE);
     protected final JCheckBox queueRedeclare = new JCheckBox("Redeclare", AMQPSampler.DEFAULT_QUEUE_REDECLARE);
     protected final JCheckBox queueExclusive = new JCheckBox("Exclusive", AMQPSampler.DEFAULT_QUEUE_EXCLUSIVE);
     protected final JCheckBox queueAutoDelete = new JCheckBox("Auto Delete", AMQPSampler.DEFAULT_QUEUE_AUTO_DELETE);
+    protected final JCheckBox queueAutoWait = new JCheckBox("Auto Wait", AMQPSampler.DEFAULT_QUEUE_AUTO_WAIT);
 
     protected JLabeledTextField virtualHost = new JLabeledTextField("Virtual Host");
     protected JLabeledTextField host = new JLabeledTextField("             Host");
@@ -60,7 +64,7 @@ public abstract class AMQPSamplerGui extends AbstractSamplerGui {
     private static final String QUEUE_SETTINGS_LABEL = "Queue";
     private static final String CONNECTION_SETTINGS_LABEL = "Connection";
 
-    private static final String WIKI_PAGE = "https://github.com/aliesbelik/jmeter-amqp-plugin";
+    private static final String WIKI_PAGE = "https://github.com/maurigre/jmeter-amqp-plugin";
 
     protected abstract void setMainPanel(JPanel panel);
 
@@ -84,6 +88,8 @@ public abstract class AMQPSamplerGui extends AbstractSamplerGui {
         queue.setText(sampler.getQueue());
         routingKey.setText(sampler.getRoutingKey());
         messageTTL.setText(sampler.getMessageTTL());
+        deadLetterExchange.setText(sampler.getXDeadLetterExchange());
+        deadLetterRoutingKey.setText(sampler.getXDeadLetterRoutingKey());
         messageExpires.setText(sampler.getMessageExpires());
         maxPriority.setText(sampler.getMaxPriority());
 
@@ -91,6 +97,7 @@ public abstract class AMQPSamplerGui extends AbstractSamplerGui {
         queueRedeclare.setSelected(sampler.getQueueRedeclare());
         queueAutoDelete.setSelected(sampler.queueAutoDelete());
         queueExclusive.setSelected(sampler.queueExclusive());
+        queueAutoWait.setSelected(sampler.queueAutoWait());
 
         virtualHost.setText(sampler.getVirtualHost());
         host.setText(sampler.getHost());
@@ -120,6 +127,8 @@ public abstract class AMQPSamplerGui extends AbstractSamplerGui {
         queue.setText(AMQPSampler.DEFAULT_QUEUE_NAME);
         routingKey.setText(AMQPSampler.DEFAULT_ROUTING_KEY);
         messageTTL.setText(AMQPSampler.DEFAULT_MSG_TTL);
+        deadLetterExchange.setText(AMQPSampler.DEFAULT_DEAD_LETTER_EXCHANGE);
+        deadLetterRoutingKey.setText(AMQPSampler.DEFAULT_DEAD_LETTER_ROUTING_KEY);
         messageExpires.setText(AMQPSampler.DEFAULT_MSG_EXPIRES);
         maxPriority.setText(AMQPSampler.DEFAULT_MSG_PRIORITY);
 
@@ -127,6 +136,7 @@ public abstract class AMQPSamplerGui extends AbstractSamplerGui {
         queueRedeclare.setSelected(AMQPSampler.DEFAULT_QUEUE_REDECLARE);
         queueAutoDelete.setSelected(AMQPSampler.DEFAULT_QUEUE_AUTO_DELETE);
         queueExclusive.setSelected(AMQPSampler.DEFAULT_QUEUE_EXCLUSIVE);
+        queueAutoWait.setSelected(AMQPSampler.DEFAULT_QUEUE_AUTO_WAIT);
 
         virtualHost.setText(AMQPSampler.DEFAULT_VIRTUAL_HOST);
         host.setText(AMQPSampler.DEFAULT_HOSTNAME);
@@ -158,6 +168,8 @@ public abstract class AMQPSamplerGui extends AbstractSamplerGui {
         sampler.setQueue(queue.getText());
         sampler.setRoutingKey(routingKey.getText());
         sampler.setMessageTTL(messageTTL.getText());
+        sampler.setXDeadLetterExchange(deadLetterExchange.getText());
+        sampler.setXDeadLetterRoutingKey(deadLetterRoutingKey.getText());
         sampler.setMessageExpires(messageExpires.getText());
         sampler.setMaxPriority(maxPriority.getText());
 
@@ -165,6 +177,7 @@ public abstract class AMQPSamplerGui extends AbstractSamplerGui {
         sampler.setQueueRedeclare(queueRedeclare.isSelected());
         sampler.setQueueAutoDelete(queueAutoDelete.isSelected());
         sampler.setQueueExclusive(queueExclusive.isSelected());
+        sampler.setQueueAutoWait(queueAutoWait.isSelected());
 
         sampler.setVirtualHost(virtualHost.getText());
         sampler.setHost(host.getText());
@@ -264,10 +277,18 @@ public abstract class AMQPSamplerGui extends AbstractSamplerGui {
 
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
-        queueSettings.add(messageExpires, gridBagConstraints);
+        queueSettings.add(deadLetterExchange, gridBagConstraints);
 
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
+        queueSettings.add(deadLetterRoutingKey, gridBagConstraints);
+
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        queueSettings.add(messageExpires, gridBagConstraints);
+
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
         queueSettings.add(maxPriority, gridBagConstraints);
 
         gridBagConstraints.gridx = 1;
@@ -285,6 +306,10 @@ public abstract class AMQPSamplerGui extends AbstractSamplerGui {
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
         queueSettings.add(queueExclusive, gridBagConstraints);
+
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        queueSettings.add(queueAutoWait, gridBagConstraints);
 
         gridBagConstraintsCommon.gridx = 0;
         gridBagConstraintsCommon.gridy = 0;

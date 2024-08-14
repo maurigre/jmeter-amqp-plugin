@@ -2,17 +2,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>io.github.aliesbelik</groupId>
+  <groupId>io.github.maurigre</groupId>
   <artifactId>jmeter-amqp-plugin</artifactId>
   <version>${revision}</version>
   <packaging>jar</packaging>
 
   <name>JMeter AMQP plugin</name>
   <description>JMeter plugin to publish and consume messages from RabbitMQ or any AMQP message broker</description>
-  <url>https://github.com/aliesbelik/jmeter-amqp-plugin</url>
+  <url>https://github.com/maurigre/jmeter-amqp-plugin</url>
 
   <properties>
-    <revision>0.3.1-SNAPSHOT</revision>
+    <revision>0.3.1</revision>
     <java.version>1.8</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -20,8 +20,8 @@
     <maven.compiler.target>${java.version}</maven.compiler.target>
 
     <!-- SonarCloud integration -->
-    <sonar.projectKey>aliesbelik_jmeter-amqp-plugin</sonar.projectKey>
-    <sonar.organization>aliesbelik</sonar.organization>
+    <sonar.projectKey>maurigre_jmeter-amqp-plugin</sonar.projectKey>
+    <sonar.organization>maurigre</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
     <!-- dependency versions -->
@@ -162,26 +162,26 @@
       </roles>
     </developer>
     <developer>
-      <id>aliesbelik</id>
-      <name>Aliaksandr Belik</name>
-      <url>https://github.com/aliesbelik</url>
+      <id>maurigre</id>
+      <name>Mauri Reis</name>
+      <url>https://github.com/maurigre</url>
     </developer>
   </developers>
 
   <scm>
-    <url>https://github.com/aliesbelik/jmeter-amqp-plugin</url>
-    <connection>scm:git:https://github.com/aliesbelik/jmeter-amqp-plugin.git</connection>
-    <developerConnection>scm:git:https://github.com/aliesbelik/jmeter-amqp-plugin.git</developerConnection>
+    <url>https://github.com/maurigre/jmeter-amqp-plugin</url>
+    <connection>scm:git:https://github.com/maurigre/jmeter-amqp-plugin.git</connection>
+    <developerConnection>scm:git:https://github.com/maurigre/jmeter-amqp-plugin.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
 
   <issueManagement>
     <system>GitHub Issues</system>
-    <url>https://github.com/aliesbelik/jmeter-amqp-plugin/issues</url>
+    <url>https://github.com/maurigre/jmeter-amqp-plugin/issues</url>
   </issueManagement>
 
   <ciManagement>
     <system>GitHub</system>
-    <url>https://github.com/aliesbelik/jmeter-amqp-plugin/actions</url>
+    <url>https://github.com/maurigre/jmeter-amqp-plugin/actions</url>
   </ciManagement>
 </project>

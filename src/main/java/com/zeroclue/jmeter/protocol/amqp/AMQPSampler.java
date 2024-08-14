@@ -51,6 +51,9 @@ public abstract class AMQPSampler extends AbstractSampler implements ThreadListe
     private static final String QUEUE_REDECLARE         = "AMQPSampler.Redeclare";
     private static final String QUEUE_EXCLUSIVE         = "AMQPSampler.QueueExclusive";
     private static final String QUEUE_AUTO_DELETE       = "AMQPSampler.QueueAutoDelete";
+    private static final String QUEUE_AUTO_WAIT       = "AMQPSampler.QueueAutoWait";
+    private static final String DEAD_LETTER_EXCHANGE    = "AMQPSampler.XDeadLetterExchange";
+    private static final String DEAD_LETTER_ROUTING_KEY = "AMQPSampler.XDeadLetterRoutingKey";
 
     public static final String[] EXCHANGE_TYPES = new String[] {
         "direct",
@@ -74,8 +77,11 @@ public abstract class AMQPSampler extends AbstractSampler implements ThreadListe
     public static final boolean DEFAULT_QUEUE_AUTO_DELETE = false;
     public static final boolean DEFAULT_QUEUE_REDECLARE = false;
     public static final boolean DEFAULT_QUEUE_EXCLUSIVE = false;
+    public static final boolean DEFAULT_QUEUE_AUTO_WAIT = false;
 
     public static final String DEFAULT_MSG_TTL = "";
+    public static final String DEFAULT_DEAD_LETTER_EXCHANGE = "";
+    public static final String DEFAULT_DEAD_LETTER_ROUTING_KEY = null;
     public static final String DEFAULT_MSG_EXPIRES = "";
     public static final String DEFAULT_MSG_PRIORITY = "";
 
@@ -182,6 +188,15 @@ public abstract class AMQPSampler extends AbstractSampler implements ThreadListe
             arguments.put("x-max-priority", getMaxPriorityAsInt());
         }
 
+        if(queueAutoWait()) {
+            if (getXDeadLetterExchange() != null) {
+                arguments.put("x-dead-letter-exchange", getXDeadLetterExchange());
+            }
+
+            if (getXDeadLetterRoutingKey() != null) {
+                arguments.put("x-dead-letter-routing-key", getXDeadLetterRoutingKey());
+            }
+        }
         return arguments;
     }
 
@@ -320,12 +335,20 @@ public abstract class AMQPSampler extends AbstractSampler implements ThreadListe
         return getPropertyAsInt(MESSAGE_EXPIRES);
     }
 
-    public String getMaxPriority() {
-        return getPropertyAsString(MAX_PRIORITY);
+    public String getXDeadLetterExchange() {
+        return getPropertyAsString(DEAD_LETTER_EXCHANGE);
     }
 
-    public void setMaxPriority(String name) {
-        setProperty(MAX_PRIORITY, name);
+    public void setXDeadLetterExchange(String name) {
+        setProperty(DEAD_LETTER_EXCHANGE, name);
+    }
+
+    public String getXDeadLetterRoutingKey() {
+        return getPropertyAsString(DEAD_LETTER_ROUTING_KEY);
+    }
+
+    public void setXDeadLetterRoutingKey(String name) {
+        setProperty(DEAD_LETTER_ROUTING_KEY, name);
     }
 
     protected Integer getMaxPriorityAsInt() {
@@ -338,6 +361,14 @@ public abstract class AMQPSampler extends AbstractSampler implements ThreadListe
         }
 
         return getPropertyAsInt(MAX_PRIORITY);
+    }
+
+    public String getMaxPriority() {
+        return getPropertyAsString(MAX_PRIORITY);
+    }
+
+    public void setMaxPriority(String name) {
+        setProperty(MAX_PRIORITY, name);
     }
 
     public String getHost() {
@@ -476,6 +507,21 @@ public abstract class AMQPSampler extends AbstractSampler implements ThreadListe
 
     public void setQueueRedeclare(Boolean content) {
         setProperty(QUEUE_REDECLARE, content);
+    }
+
+    /**
+     * @return the whether the queue should auto wait
+     */
+    public boolean getQueueAutoWait() {
+        return getPropertyAsBoolean(QUEUE_AUTO_WAIT);
+    }
+
+    public void setQueueAutoWait(Boolean value) {
+        setProperty(QUEUE_AUTO_WAIT, value.toString());
+    }
+
+    public boolean queueAutoWait() {
+        return getPropertyAsBoolean(QUEUE_AUTO_WAIT);
     }
 
     protected void cleanup() {
