@@ -1,0 +1,187 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>io.github.aliesbelik</groupId>
+  <artifactId>jmeter-amqp-plugin</artifactId>
+  <version>${revision}</version>
+  <packaging>jar</packaging>
+
+  <name>JMeter AMQP plugin</name>
+  <description>JMeter plugin to publish and consume messages from RabbitMQ or any AMQP message broker</description>
+  <url>https://github.com/aliesbelik/jmeter-amqp-plugin</url>
+
+  <properties>
+    <revision>0.3.1-SNAPSHOT</revision>
+    <java.version>1.8</java.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
+
+    <!-- SonarCloud integration -->
+    <sonar.projectKey>aliesbelik_jmeter-amqp-plugin</sonar.projectKey>
+    <sonar.organization>aliesbelik</sonar.organization>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+
+    <!-- dependency versions -->
+    <jmeter.version>5.6.3</jmeter.version>
+    <amqp.client.version>5.20.0</amqp.client.version>
+    <commons-lang3.version>3.14.0</commons-lang3.version>
+    <slf4j.version>2.0.11</slf4j.version>
+    <jmeter.plugins.cmn.version>0.7</jmeter.plugins.cmn.version>
+
+    <!-- plugin versions -->
+    <maven-compiler-plugin.version>3.12.1</maven-compiler-plugin.version>
+    <maven-shade-plugin.version>3.5.1</maven-shade-plugin.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.rabbitmq</groupId>
+      <artifactId>amqp-client</artifactId>
+      <version>${amqp.client.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.jmeter</groupId>
+      <artifactId>ApacheJMeter_core</artifactId>
+      <version>${jmeter.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.jmeter</groupId>
+      <artifactId>jorphan</artifactId>
+      <version>${jmeter.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>kg.apc</groupId>
+      <artifactId>jmeter-plugins-cmn-jmeter</artifactId>
+      <version>${jmeter.plugins.cmn.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>${commons-lang3.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${slf4j.version}</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <sourceDirectory>src/main/java</sourceDirectory>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven-compiler-plugin.version}</version>
+        <configuration>
+          <source>${maven.compiler.source}</source>
+          <target>${maven.compiler.target}</target>
+          <showDeprecation>false</showDeprecation>
+          <showWarnings>true</showWarnings>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>${maven-shade-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>create-fat-jar</id>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <minimizeJar>true</minimizeJar>
+              <shadedArtifactAttached>false</shadedArtifactAttached>
+              <createDependencyReducedPom>false</createDependencyReducedPom>
+              <filters>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/*.MF</exclude>
+                    <exclude>META-INF/*.SF</exclude>
+                    <exclude>META-INF/*.DSA</exclude>
+                    <exclude>META-INF/*.RSA</exclude>
+                  </excludes>
+                </filter>
+              </filters>
+              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <manifestEntries>
+                    <Automatic-Module-Name>${project.artifactId}</Automatic-Module-Name>
+                    <Implementation-Title>${project.name}</Implementation-Title>
+                    <Implementation-Version>${project.version}</Implementation-Version>
+                    <Implementation-Vendor-Id>${project.groupId}</Implementation-Vendor-Id>
+                    <Implementation-URL>${project.url}</Implementation-URL>
+                    <Implementation-Build-Date>${maven.build.timestamp}</Implementation-Build-Date>
+                  </manifestEntries>
+                </transformer>
+              </transformers>
+              <artifactSet>
+                <excludes>
+                  <exclude>org.apache.jmeter:*</exclude>
+                  <exclude>org.apache.logging.log4j:*</exclude>
+                  <exclude>org.slf4j:*</exclude>
+                  <exclude>commons-codec:*</exclude>
+                  <exclude>commons-logging:*</exclude>
+                  <exclude>net.java.dev.jna:*</exclude>
+                  <exclude>kg.apc:jmeter-plugins-charts:*</exclude>
+                </excludes>
+              </artifactSet>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>jlavallee</id>
+      <name>Jeff Lavallee</name>
+      <url>https://github.com/jlavallee</url>
+      <roles>
+        <role>author</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>aliesbelik</id>
+      <name>Aliaksandr Belik</name>
+      <url>https://github.com/aliesbelik</url>
+    </developer>
+  </developers>
+
+  <scm>
+    <url>https://github.com/aliesbelik/jmeter-amqp-plugin</url>
+    <connection>scm:git:https://github.com/aliesbelik/jmeter-amqp-plugin.git</connection>
+    <developerConnection>scm:git:https://github.com/aliesbelik/jmeter-amqp-plugin.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
+
+  <issueManagement>
+    <system>GitHub Issues</system>
+    <url>https://github.com/aliesbelik/jmeter-amqp-plugin/issues</url>
+  </issueManagement>
+
+  <ciManagement>
+    <system>GitHub</system>
+    <url>https://github.com/aliesbelik/jmeter-amqp-plugin/actions</url>
+  </ciManagement>
+</project>
