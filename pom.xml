@@ -162,6 +162,14 @@
       </roles>
     </developer>
     <developer>
+      <id>aliesbelik</id>
+      <name>Aliaksandr Belik</name>
+      <url>https://github.com/aliesbelik</url>
+      <roles>
+        <role>co-author</role>
+      </roles>
+    </developer>
+    <developer>
       <id>maurigre</id>
       <name>Mauri Reis</name>
       <url>https://github.com/maurigre</url>

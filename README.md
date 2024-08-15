@@ -1,8 +1,8 @@
 # JMeter AMQP Plugin
 
-[![build status](https://img.shields.io/github/actions/workflow/status/aliesbelik/jmeter-amqp-plugin/maven.yml?branch=main&label=build&color=18BA91&style=flat-square)](https://github.com/aliesbelik/jmeter-amqp-plugin/actions/workflows/maven.yml)
-[![release](https://img.shields.io/github/v/release/aliesbelik/jmeter-amqp-plugin?label=release&color=18BA91&style=flat-square)](https://github.com/aliesbelik/jmeter-amqp-plugin/releases/latest)
-![downloads](https://img.shields.io/github/downloads/aliesbelik/jmeter-amqp-plugin/total?color=18BA91&style=flat-square)
+[![build status](https://img.shields.io/github/actions/workflow/status/maurigre/jmeter-amqp-plugin/maven.yml?branch=main&label=build&color=18BA91&style=flat-square)](https://github.com/maurigre/jmeter-amqp-plugin/actions/workflows/maven.yml)
+[![release](https://img.shields.io/github/v/release/maurigre/jmeter-amqp-plugin?label=release&color=18BA91&style=flat-square)](https://github.com/maurigre/jmeter-amqp-plugin/releases/latest)
+![downloads](https://img.shields.io/github/downloads/maurigre/jmeter-amqp-plugin/total?color=18BA91&style=flat-square)
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?color=18BA91&style=flat-square)](CONTRIBUTING.md)
 
 A [JMeter](http://jmeter.apache.org/) plugin to publish & consume messages from [RabbitMQ](http://www.rabbitmq.com/)
@@ -16,7 +16,7 @@ or any [AMQP](http://www.amqp.org/) message broker.
 
 ## Installation
 
-1. Download the [latest release](https://github.com/aliesbelik/jmeter-amqp-plugin/releases/latest) or
+1. Download the [latest release](https://github.com/maurigre/jmeter-amqp-plugin/releases/latest) or
 [build your own](#build) from the source code.
 2. Put `jmeter-amqp-plugin-VERSION.jar` into `$JMETER_HOME/lib/ext` directory.\
 It contains the necessary AMQP client dependency, no other jars are required.
@@ -88,7 +88,7 @@ Restart JMeter.
 ## Acknowledgements
 
 Thanks to
-
+  - [aliesbelik](https://github.com/aliesbelik) (Aliaksandr Belik), who created [adapted plugin](https://github.com/aliesbelik/jmeter-amqp-plugin);
   - [jlavallee](https://github.com/jlavallee) (Jeff Lavallee), who created [original plugin](https://github.com/jlavallee/JMeter-Rabbit-AMQP);
   - [polarnik](https://github.com/polarnik) (Viacheslav Smirnov), who spent time and efforts to create
 [comparison](https://github.com/polarnik/JMeter-Rabbit-AMQP-info) of the forks with valuable changes;
